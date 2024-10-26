@@ -36,8 +36,9 @@ import idealize_backbone
 import rf2aa.util
 import aa_model
 import copy
-
 import e3nn.o3 as o3
+
+from threadpoolctl import threadpool_limits, threadpool_info
 
 def warm_up_spherical_harmonics():
     ''' o3.spherical_harmonics returns different values on 1st call vs all subsequent calls
@@ -70,7 +71,7 @@ def get_seeds():
     }
 
 @hydra.main(version_base=None, config_path='config/inference', config_name='aa')
-def main(conf: HydraConfig) -> None:
+def main(conf: HydraConfig) -> None:    
     sampler = get_sampler(conf)
     sample(sampler)
 
@@ -120,6 +121,7 @@ def sample(sampler):
 
 def sample_one(sampler, simple_logging=False):
     # For intermediate output logging
+
     indep = sampler.sample_init()
 
     denoised_xyz_stack = []
@@ -230,4 +232,6 @@ def save_outputs(sampler, out_prefix, indep, denoised_xyz_stack, px0_xyz_stack, 
 
 
 if __name__ == '__main__':
+    torch.set_num_threads(1)
+    torch.set_num_interop_threads(1)
     main()
