@@ -20,11 +20,9 @@ import re
 import os, time, pickle
 import dataclasses
 import torch 
-from omegaconf import DictConfig, OmegaConf
+from omegaconf import OmegaConf
 import hydra
 import logging
-from util import writepdb_multi, writepdb
-from inference import utils as iu
 from icecream import ic
 from hydra.core.hydra_config import HydraConfig
 import numpy as np
@@ -35,10 +33,7 @@ import rf2aa.tensor_util
 import idealize_backbone
 import rf2aa.util
 import aa_model
-import copy
 import e3nn.o3 as o3
-
-from threadpoolctl import threadpool_limits, threadpool_info
 
 def warm_up_spherical_harmonics():
     ''' o3.spherical_harmonics returns different values on 1st call vs all subsequent calls
