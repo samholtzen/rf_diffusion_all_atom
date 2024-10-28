@@ -1,0 +1,12 @@
+rf2aa/
+lib/
+img/
+input/
+outputs/
+schedule_cache/
+rosetta_python/
+RFDiffusionAA_paper_weights.pt 
+__pycache__/
+inference/
+cached_schedules/
+.ipynb_checkpoints/
