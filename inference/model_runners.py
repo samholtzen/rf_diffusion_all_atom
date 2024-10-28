@@ -43,7 +43,12 @@ class Sampler:
     def initialize(self, conf: DictConfig):
         self._log = logging.getLogger(__name__)
         if torch.cuda.is_available():
-            self.device = torch.device('cuda')
+            if conf.inference.cuda_core in range(torch.cuda.device_count()):
+                self.device = torch.device('cuda', conf.inference.cuda_core)
+                print(f'Running on CUDA core {conf.inference.cuda_core}')
+            else:
+                self.device = torch.device('cuda')
+                print(f'Running on default CUDA core')
         else:
             self.device = torch.device('cpu')
         needs_model_reload = not self.initialized or conf.inference.ckpt_path != self._conf.inference.ckpt_path
@@ -289,7 +294,7 @@ class NRBStyleSelfCond(Sampler):
         '''
         Generate the next pose that the model should be supplied at timestep t-1.
         '''
-
+        
         rfi = self.model_adaptor.prepro(indep, t, self.is_diffused)
         rf2aa.tensor_util.to_device(rfi, self.device)
         seq_init = torch.nn.functional.one_hot(

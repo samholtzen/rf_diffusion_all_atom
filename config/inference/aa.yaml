@@ -3,7 +3,7 @@ defaults:
   - base
 
 inference:
-  ckpt_path: RFDiffusionAA_paper_weights.pt
+  ckpt_path: /home/sholtzen/heme_binder_diffusion/rf_diffusion_all_atom/RFDiffusionAA_paper_weights.pt
   align_motif: False
   str_self_cond: True
 

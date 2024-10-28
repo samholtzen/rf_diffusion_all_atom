@@ -20,11 +20,9 @@ import re
 import os, time, pickle
 import dataclasses
 import torch 
-from omegaconf import DictConfig, OmegaConf
+from omegaconf import OmegaConf
 import hydra
 import logging
-from util import writepdb_multi, writepdb
-from inference import utils as iu
 from icecream import ic
 from hydra.core.hydra_config import HydraConfig
 import numpy as np
@@ -35,8 +33,6 @@ import rf2aa.tensor_util
 import idealize_backbone
 import rf2aa.util
 import aa_model
-import copy
-
 import e3nn.o3 as o3
 
 def warm_up_spherical_harmonics():
@@ -70,7 +66,7 @@ def get_seeds():
     }
 
 @hydra.main(version_base=None, config_path='config/inference', config_name='aa')
-def main(conf: HydraConfig) -> None:
+def main(conf: HydraConfig) -> None:    
     sampler = get_sampler(conf)
     sample(sampler)
 
@@ -120,6 +116,7 @@ def sample(sampler):
 
 def sample_one(sampler, simple_logging=False):
     # For intermediate output logging
+
     indep = sampler.sample_init()
 
     denoised_xyz_stack = []
@@ -230,4 +227,6 @@ def save_outputs(sampler, out_prefix, indep, denoised_xyz_stack, px0_xyz_stack, 
 
 
 if __name__ == '__main__':
+    torch.set_num_threads(1)
+    torch.set_num_interop_threads(1)
     main()
